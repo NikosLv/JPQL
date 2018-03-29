@@ -1,5 +1,6 @@
 package L6_7.first;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.persistence.EntityManager;
@@ -8,6 +9,7 @@ import javax.persistence.Persistence;
 
 import L6_7.first.entity.Comment;
 import L6_7.first.entity.Post;
+import L6_7.first.entity.Product;
 import L6_7.first.entity.Tag;
 import L6_7.first.entity.enums.Status;
 
@@ -17,6 +19,10 @@ public class App {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("mysql");
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
+		
+		
+		
+		
 		/**
 		 * command to select data from the list comments
 		 */
@@ -76,17 +82,23 @@ public class App {
 		// Long sum = em.createQuery("SELECT sum(c.id) FROM Comment c", Long.class).getSingleResult();
 		// System.out.println("Sum:"+sum);
 		
-		 Double avg=em.createQuery("SELECT avg(c.id) FROM Comment c", Double.class).getSingleResult();
-		 System.out.println("Avg:"+avg);
-		//
+		// Double avg=em.createQuery("SELECT avg(c.id) FROM Comment c", Double.class).getSingleResult();
+		// System.out.println("Avg:"+avg);
+		
 		// Integer max=em.createQuery("SELECT max(c.id) FROM Comment c", Integer.class).getSingleResult();
 		// System.out.println("Max:"+max);
-		//
+		
 		// Integer min=em.createQuery("SELECT min(c.id) FROM Comment c", Integer.class).getSingleResult();
 		// System.out.println("Min:"+min);
+		
+		 Post post =em.createQuery("SELECT p FROM Post p WHERE p.id=:id", Post.class)
+				 .setParameter("id", 4).getSingleResult();
+				  System.out.println(post);
+				  
+				  System.out.println(post.getProduct());
 
-		// addTags(em);
-		// addPost(em);
+		 //addTags(em);
+		 //addPost(em);
 		//addComment(em);
 
 		em.getTransaction().commit();
@@ -125,10 +137,16 @@ public class App {
 			post.setTitle("Post title#" + i);
 			post.setContent("Long post content#" + i);
 
-			if (i % 2 == 0)
-				post.setStatus(Status.DRAFT);
-			if (i % 2 == 1)
-				post.setStatus(Status.PUBLISH);
+			if (i % 2 == 0)	post.setStatus(Status.DRAFT);
+			if (i % 2 == 1) post.setStatus(Status.PUBLISH);
+			
+			Product product = new Product();
+			product.setName("Product name#"+i);
+			product.setDescription( "Product description#"+i);
+			product.setPrice(new BigDecimal(i+10+".00"));
+			product.setInStock(15+i);
+			
+			post.setProduct(product);
 
 			em.persist(post);
 

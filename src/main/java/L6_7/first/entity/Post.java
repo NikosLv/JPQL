@@ -3,14 +3,7 @@ package L6_7.first.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.*;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import L6_7.first.entity.enums.Status;
 import lombok.Getter;
@@ -35,6 +28,10 @@ public class Post extends BaseEntity {
 	
 	@OneToMany(mappedBy="post")
 	private List<Comment> comments =new ArrayList<>();
+	
+	@OneToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch=FetchType.LAZY)
+	@JoinColumn(name="product_id")
+	private Product product;
 	
 	
 	@ManyToMany
